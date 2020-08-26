@@ -6,6 +6,7 @@
     "build": "webpack --config webpack.config.js --env.production",
     "rebuild": "webpack --config webpack.config.js --env.production --env.rebuild",
     "dev": "webpack-dev-server --host localhost --port 80 --config webpack.config.js --open",
+    "dev2": "webpack-dev-server --host localhost --config webpack.config.js --open",
     "start": "node ./auto-reload.js"
   },
   "keywords": [],
@@ -21,6 +22,7 @@
     "jquery-ui-dist": "^1.12.1",
     "lodash": "^4.17.19",
     "popper.js": "^1.16.1",
+    "three": "^0.119.1",
     "vue": "^2.6.11",
     "vue-cli": "^2.9.6",
     "vue-loader": "^15.9.3",

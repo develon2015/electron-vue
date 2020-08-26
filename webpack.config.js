@@ -28,7 +28,7 @@ const CONFIG = {
         contentBase: DIR_DIST,
         https: false,
     },
-    target: 'electron-renderer',
+    // target: 'electron-renderer',
     // externals: ['jquery'],
 };
 
@@ -41,6 +41,7 @@ function config(env = {}, argv) {
     }
     if (env && env.rebuild) {
         console.log('Rebuild production');
+        console.log(process.platform);
         if (process.platform.match(/^win.*/)) {
             // Implement this on Windows OS
             const child_process = require('child_process');
