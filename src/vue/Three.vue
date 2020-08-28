@@ -1,4 +1,5 @@
 <template>
+<!-- Three.js 3D动画演示 帧率计算 -->
 <div ref="app" id="app">
     <div id="frame"></div>
 </div>
@@ -23,6 +24,7 @@ export default {
             frame: 0,
             frame_start: null,
             frame_count: 0,
+            doRender: false,
         };
     },
     methods: {
@@ -30,7 +32,7 @@ export default {
          * 场景渲染函数
          */
         render() {
-            requestAnimationFrame(this.render);
+            if (this.doRender) requestAnimationFrame(this.render);
             [this.height, this.width] = [this.$refs.app.clientHeight, this.$refs.app.clientWidth];
             this.renderer.setSize(this.width, this.height);
             this.material.setValues({
@@ -57,6 +59,7 @@ export default {
     },
     mounted() {
         window.vm = this;
+        this.doRender = true;
         [this.height, this.width] = [this.$refs.app.clientHeight, this.$refs.app.clientWidth];
         this.scene = new THREE.Scene(); // 场景
         this.camera = new THREE.PerspectiveCamera(75, this.width / this.height, 0.1, 1000); // 相机
@@ -71,6 +74,9 @@ export default {
 
         this.render();
     }, // mounted()
+    destroyed() {
+        this.doRender = false;
+    }
 }
 </script>
 

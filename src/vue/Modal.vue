@@ -71,9 +71,7 @@
 
 <script>
 // import { ipcRenderer, } from 'electron';
-const router = new VueRouter({});
 export default {
-  router,
   data() {
     return {
     };

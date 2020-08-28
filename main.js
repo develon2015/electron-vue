@@ -16,6 +16,7 @@ ipcMain.on('test', (e, param1, param2) => {
 
 function init() {
   window.loadURL('http://localhost');
+  // window.loadURL('http://127.0.0.1:5501/');
   window.flashFrame(true); // 状态栏闪烁
   new Notification({
     title: '应用程序已加载',

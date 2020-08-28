@@ -1,11 +1,12 @@
 <template>
+<!-- two.js 2D绘图应用 -->
 <div id="app">
     写字板
 </div>
 </template>
 
 <script>
-import './two';
+import 'two.js';
 // import $ from 'jquery'; // 如果不存在exlib.js
 
 export default {
@@ -32,8 +33,8 @@ export default {
         let app = document.getElementById('app');
         this.two = new Two({
             // type: 'WebGLRenderer',
-            type: 'CanvasRenderer',
-            // type: 'SVGRenderer',
+            // type: 'CanvasRenderer',
+            type: 'SVGRenderer',
             fullscreen: true,
         }).appendTo(app);
 
@@ -41,10 +42,7 @@ export default {
         let trace = []; // 记录一次笔画
         $('body').on('mousedown', () => {
             trace = [];
-            globalThis.onmousemove = ({
-                x,
-                y
-            }) => {
+            globalThis.onmousemove = ({ x, y }) => {
                 if (start === null) start = [x, y];
                 else {
                     let point = this.dropPoint(x, y);
@@ -57,20 +55,29 @@ export default {
                 }
             };
         });
-        $('body').on('mouseup', () => {
-            globalThis.onmousemove = null;
-            start = null;
-            this.traces.push(trace);
+        ['mouseup', 'mouseleave'].forEach(it => {
+            $('body').on(it, () => {
+                globalThis.onmousemove = null;
+                start = null;
+                this.traces.push(trace);
+            });
         });
         window.onkeypress = event => {
-            let { ctrlKey, keyCode } = event;
+            let { ctrlKey, keyCode, key } = event;
             if (ctrlKey && keyCode === 26) { // ^Z
                 let tmp = this.traces.pop();
                 tmp.forEach(it => {
                     this.two.remove(it);
                 });
-                this.two.update();
+                return this.two.update();
             }
+            if (key === 'd') {
+                this.two.clear();
+                return this.two.update();
+            }
+        };
+        window.onresize = event => {
+            this.two.update(); // 画布尺寸变化, 及时更新, 否则出现空白画布
         };
     },
 }
