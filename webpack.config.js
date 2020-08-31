@@ -32,7 +32,7 @@ const CONFIG = {
     // externals: ['jquery'],
 };
 
-function config(env = {}, argv) {
+function config(env = {}, argv) { // 当webpack命令没有指定--env参数时, env未定义, 可以设置默认值env = {}, 也可以在读成员时加逻辑: env && env.custom_param
     if (env && env.production) {
         console.log('Build production');
         CONFIG.mode = 'production';
@@ -41,15 +41,18 @@ function config(env = {}, argv) {
     }
     if (env && env.rebuild) {
         console.log('Rebuild production');
-        console.log(process.platform);
-        if (process.platform.match(/^win.*/)) {
-            // Implement this on Windows OS
+        console.log('OS:', process.platform);
+        try {
             const child_process = require('child_process');
-            try {
+            if (process.platform.match(/^win.*/)) {
+                // Implement this on Windows OS
                 child_process.execSync(`rmdir /S /Q ${DIR_DIST}`);
-            } catch(error) { }
-        }
+            } else if (process.platform.match(/^linux.*/)) {
+                // Implement this on Linux OS
+                child_process.execSync(`rm -rf ${DIR_DIST}`);
+            }
+        } catch (error) { }
     }
     return CONFIG;
 }
-module.exports = config;
+module.exports = config; // 导出函数, 从而可以根据package.json定义的脚本中webpack命令的参数--env.custom_param=value
