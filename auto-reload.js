@@ -1,5 +1,6 @@
 /**
- * 
+ * 针对不同平台实现自动重载.
+ * 在Windows平台下通过使用taskkill /IM electron.exe /F命令强制关闭electron进程.
  */
 const fs = require('fs');
 const child_process = require('child_process');
