@@ -7,15 +7,17 @@ const child_process = require('child_process');
 const _ = require('lodash');
 
 const rules = [
-    { event: 'change', test: /^main\.js$/ },
+    { event: 'change', test: /^.*\.js$/ },
 ];
 
 /**
  * 监听源码文件事件
+ * @param {String} dir 要监听的目录, 子目录下的文件不会被监听
  * @param {Array} rules 规则数组, 每个规则是包含了"事件名"字符串和"文件名"正则表达式两个字段的对象: { event, test }
  */
-function watch_source_code_file(rules) {
-    fs.watch(__dirname, {}, (event, filename) => {
+function watch_source_code_file(dir, rules) {
+    // 递归地监视仅在Windows和OSX系统上支持。 这就意味着在其它系统上要使用替代方案。
+    fs.watch(dir, { recursive: true }, (event, filename) => {
         rules.forEach(it => {
             if (event === it.event && it.test.test(filename)) {
                 _handler(event, filename); // 如果源码发生了变化, 则执行_handle()函数的相关逻辑
@@ -24,7 +26,7 @@ function watch_source_code_file(rules) {
     });
 
     // 一次"保存文件"的操作可能触发多次"change"事件, 因此使用Lodash提供的函数去抖动功能
-    const _handler = _.debounce(handler, 800, { leading: true, trailing: false, });
+    const _handler = globalThis._handler || (globalThis._handler = _.debounce(handler, 800, { leading: true, trailing: false, }));
 }
 
 /** 编码electron主程序相关文件变化应该执行的操作 */
@@ -66,7 +68,7 @@ function start_electron() {
 
 /** 主程序 */
 function main() {
-    watch_source_code_file(rules);
+    watch_source_code_file(__dirname, rules); // 监听项目根目录, 不含子目录, 规则在rules中定义
     start_electron();
 }
 
