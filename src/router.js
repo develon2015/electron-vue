@@ -24,7 +24,7 @@ function setupIndex() {
     });
 }
 
-loadAll('Modal', 'Two', 'Three', 'LoadFile', 'Worker');
+loadAll('Modal', 'Two', 'Three', 'LoadFile', 'Worker', 'GeoJSON');
 setupIndex();
 
 // export router config
