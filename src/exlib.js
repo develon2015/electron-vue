@@ -5,6 +5,7 @@ import $ from 'jquery';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.js';
 import _ from 'lodash';
+import 'two.js';
 
 window.Vue = Vue;
 window.VueRouter = VueRouter;

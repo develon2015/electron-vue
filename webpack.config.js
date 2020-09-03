@@ -11,14 +11,14 @@ const CONFIG = {
         exlib: path.resolve(DIR_SRC, 'exlib.js'),
     },
     output: {
-        filename: '[name].js',
+        filename: 'js/[name].js',
         path: DIR_DIST,
     },
     module: {
         rules: [
             { test: /\.vue$/, use: 'vue-loader' },
             { test: /\.css$/, use: ['vue-style-loader', 'css-loader'] },
-            { test: /\.(html|png|jpg|ico)$/, use: 'file-loader?name=[name].[ext]' },
+            { test: /\.(html|png|jpg|ico)$/, use: 'file-loader?context=src&name=[path][name].[ext]' },
         ],
     },
     plugins: [new VueLoaderPlugin()],

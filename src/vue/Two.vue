@@ -6,7 +6,6 @@
 </template>
 
 <script>
-import 'two.js';
 // import $ from 'jquery'; // 如果不存在exlib.js
 
 export default {

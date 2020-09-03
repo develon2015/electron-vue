@@ -24,7 +24,7 @@ function setupIndex() {
     });
 }
 
-loadAll('Modal', 'Two', 'Three');
+loadAll('Modal', 'Two', 'Three', 'LoadFile', 'Worker');
 setupIndex();
 
 // export router config

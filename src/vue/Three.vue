@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import * as THREE from 'three';
+// import * as THREE from 'three';
 
 export default {
     data() {

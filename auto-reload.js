@@ -17,7 +17,7 @@ const rules = [
  */
 function watch_source_code_file(dir, rules) {
     // 递归地监视仅在Windows和OSX系统上支持。 这就意味着在其它系统上要使用替代方案。
-    fs.watch(dir, { recursive: true }, (event, filename) => {
+    fs.watch(dir, { recursive: false }, (event, filename) => {
         rules.forEach(it => {
             if (event === it.event && it.test.test(filename)) {
                 _handler(event, filename); // 如果源码发生了变化, 则执行_handle()函数的相关逻辑

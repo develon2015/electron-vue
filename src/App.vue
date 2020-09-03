@@ -9,7 +9,6 @@
 
 <script>
 import router from './router';
-console.log({router});
 
 Vue.use(VueRouter);
 export default {
