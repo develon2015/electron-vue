@@ -29,7 +29,7 @@ const CONFIG = {
         https: false,
     },
     // target: 'electron-renderer', // 避免打包'electron'
-    // externals: { '$': 'jquery' },
+    // externals: { 'jquery': '$' }, // package-name在前
 };
 
 function config(env = {}, argv) { // 当webpack命令没有指定--env参数时, env未定义, 可以设置默认值env = {}, 也可以在读成员时加逻辑: env && env.custom_param
