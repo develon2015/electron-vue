@@ -71,12 +71,13 @@ function get_seajs_use_func() {
         }
         /**
          * 模拟require()函数,根据name_script解析name_requrie_script,然后注册
+         * 可以调用define就可以调用sea.use, 何不废除该函数, 解决异步问题呢?
          */
         function _require(name_require_script) {
             let resolved_name = resolve(path_script, name_require_script);
             let module = modules[resolved_name];
             if (!module) {
-                seajs_use(resolved_name);
+                seajs_use(resolved_name); // 这里必须是同步的
                 module = modules[resolved_name];
             }
             return module.exports;
@@ -84,15 +85,16 @@ function get_seajs_use_func() {
         // 执行脚本
         switch (js_platform()) {
             case 'web': { // 浏览器实现
-                globalThis.define = _define; // 将全局对象传递到即将加载的脚本中
+                let return_module = () => { callback && callback(modules[path_script].exports); };
+                globalThis.define = callback => { // 将全局对象传递到即将加载的脚本中
+                    _define(callback);
+                    return_module(); // 异步限制, 模块中的依赖不再使用require()函数, 使用sea_use异步加载即可
+                };
                 globalThis.require = _require; // 脚本调用require将再次调用seajs_use
                 globalThis.window = {}; // 防止window未定义
                 let element_script = document.createElement('script');
                 element_script.src = path_script;
-                document.body.appendChild(element_script); // js将被异步加载
-                // callback && callback(modules[path_script].exports); // 异步代码, 不可行
-                let return_module = () => { callback && callback(modules[path_script].exports); };
-                // 未解决的操作
+                document.head.appendChild(element_script); // js将被异步加载
                 break;
             }
             case 'worker': { // 浏览器Worker实现
@@ -125,11 +127,15 @@ function get_seajs_use_func() {
 switch (js_platform()) {
     case 'node': // Node和Webpack都支持module.exports
     case 'web': {
-        module.exports = {
-            js_platform,
-            get_absolute_path,
-            use: get_seajs_use_func(),
-        };
+        if (typeof module !== 'undefined') {
+            module.exports = { // 这个赋值语句会被webpack处理
+                js_platform,
+                get_absolute_path,
+                use: get_seajs_use_func(),
+            };
+        } else { // 在web-direct中直接导出全局变量seajs
+            globalThis.seajs = { use: get_seajs_use_func() };
+        }
         break;
     }
     case 'worker': {
